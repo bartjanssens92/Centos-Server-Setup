@@ -2,8 +2,10 @@
 # Network #
 ###########
 
+> Turn the network on
 ifup eth0
 ifconfig
+> Edit the file to set a static ip addr
 vi /etc/sysconfig/network-scripts/ifcfg-eth0
 
 ---------------/etc/sysconfig/network-scripts/ifcfg-eth0
@@ -25,6 +27,7 @@ NAME="System eth0"
 +IPADDR=192.168.***.***
 ~
 ---------------
+> Restart the service
 service network restart
 
 ##################
@@ -37,7 +40,25 @@ rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noar
 # Basic tools #
 ###############
 
-yum install ruby-devel rubygems vim-enhanced lsof man git tig  ntpd httpd
+yum install ruby-devel rubygems vim-enhanced lsof man git tig  ntpd -y
+
+##########
+# Apache #
+##########
+
+yum install httpd
+service httpd start
+vi /etc/httpd/conf/httpd.conf
+-#ServerName
++ServerName
+service httpd restart
+
+#######
+# Php #
+#######
+
+yum install php-mysql php-devel php-gd php-pecl-memcache php-pspell php-snmp php-xmlrpc php-xml -y
+
 
 ##########################
 # Firewall allow port 80 #
@@ -65,5 +86,37 @@ COMMIT
 
 service iptables restart
 
-####################
-# 
+#########
+# Mysql #
+#########
+
+yum install mysql-server mysql php-mysql -y
+chkconfig mysqld on
+service mysqld start
+
+##############
+# PhpMyAdmin #
+##############
+
+TEST
+
+
+############
+# OwnCloud #
+############
+
+> Adding the repo
+cd /etc/yum.repos.d/
+wget http://download.opensuse.org/repositories/isv:ownCloud:community/CentOS_CentOS-6/isv:ownCloud:community.repo
+yum install owncloud -y
+> goto 192.168.***.***/owncloud
+reboot now
+
+###########
+# Sources #
+###########
+
+http://www.cyberciti.biz/faq/linux-iptables-multiport-range/
+http://www.rackspace.com/knowledge_center/article/centos-apache-and-php-install
+http://dev.antoinesolutions.com/mysql
+http://dyn/obin.com/blog/install-owncloud-on-centos-6-4-x86_64/
